@@ -1,0 +1,41 @@
+<div class="container mt-3">
+  <div class="container col-md-5 mb-4">
+    <form [formGroup]="addMessageForm" (submit)="addMessage()" class="d-flex flex-column justify-content-between">
+      <h5>Add new message</h5>
+      <input [formControl]="newMessage" type="text" class="form-control my-2" placeholder="Message" [class.is-invalid]="newMessage.invalid && newMessage.touched">
+      <small class="alert alert-danger mb-0 mb-2" *ngIf="newMessage.invalid && newMessage.touched">Field must not be empty</small>
+      <input class="form-control" type="submit">
+    </form>
+  </div>
+  <div class="alert alert-danger d-flex dlex-column" *ngFor="let err of errors" >
+    <span *ngIf="err.status === 0; else elseMessage">Wrong CORS</span>
+    <ng-template #elseMessage>{{err.message}}</ng-template>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Message</th>
+          <th>Options</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let m of messages">
+          <td style="width: 5%;">{{m.id}}</td>
+          <td style="width: 90%;">
+            <span *ngIf="m.id !== editId">{{m.msg}}</span>
+            <input type="text" [(ngModel)]="editedValue" class="form-control form-control-sm" *ngIf="m.id === editId"/>
+          </td>
+          <td style="width: 5%;">
+            <div class="btn-group">
+              <button (click)="m.id === editId ? edit(m.id, $event) : setEditable(m.id, $event)" class="btn btn-warning btn-sm">Edit</button>
+              <button (click)="delete(m.id)" class="btn btn-danger btn-sm">Delete</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h6 *ngIf = "!messages || messages.length === 0" class="alert alert-danger">No messages</h6>
+  </div>
+</div>
